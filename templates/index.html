@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>World Borders Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <style>
+        #map { height: 400px; }
+        .search-bar { padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search for a country...">
+        <button onclick="searchCountries()">Search</button>
+    </div>
+    <div id="map"></div>
+
+    <script>
+
+        var map = L.map('map').setView([20, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Function to add country data to the map
+        function addCountriesToMap(countries) {
+            countries.forEach(function(country) {
+                var geojsonFeature = {
+                    "type": "Feature",
+                    "properties": {
+                        "name": country.name
+                    },
+                    "geometry": JSON.parse(country.mpoly)
+                };
+
+                L.geoJSON(geojsonFeature, {
+                    onEachFeature: function (feature, layer) {
+                        layer.bindPopup(feature.properties.name);
+                    }
+                }).addTo(map);
+            });
+        }
+
+async function fetchCountries(url) {
+    var json_data;
+    try {
+        const response = await fetch(url);
+
+        // Check if the response is ok (status in the range 200-299)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Get the response text
+        let text = await response.text();
+
+        json_data = JSON.stringify(text)
+        // Log the raw text for debugging
+        console.log("Raw response text:", json_data);
+
+        // Try parsing the text as JSON
+        const data = JSON.parse(toValidJson(json_data));
+
+        // Process the data
+        // ... your code to process data ...
+    } catch (error) {
+        console.error("Error fetching or processing data:", error);
+    }
+}
+
+function toValidJson(rawString) {
+  // Replace escaped double quotes with actual double quotes
+  let jsonString = rawString.replace(/\\\"/g, '"');
+
+  // Remove newline and other control characters
+  jsonString = jsonString.replace(/(\r\n|\n|\r)/gm, "");
+
+  // Handle other special characters if needed
+  // jsonString = jsonString.replace(/* other replacements */);
+
+  return jsonString;
+}
+
+
+
+
+// Call the function with the URL
+const jsonUrl = 'http://localhost:8000/api/v1/hotels/';
+fetchCountries(jsonUrl);
+
+
+        // Initial fetch of countries
+        fetchCountries();
+
+// Search function
+function searchCountries() {
+    var name = document.getElementById('search-input').value;
+    fetchCountries(name);
+}
+
+    </script>
+</body>
+</html>
