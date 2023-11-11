@@ -1,10 +1,14 @@
 # world/urls.py
 
 from django.urls import path
-from .views import ListCreateGenericViews, HotelUpdateRetreiveView
+from .views import ListCreateGenericViews, hotel_info_view, AttractionsViewSet, ListCreateViews, HotelUpdateRetreiveView
 
 urlpatterns = [
     path("hotels/", ListCreateGenericViews.as_view()),  # Added trailing slash
     path("hotels/<str:pk>/", HotelUpdateRetreiveView.as_view()),  # Added trailing slash
+    path("att/", ListCreateViews.as_view()),  # Added trailing slash
+    path("att/<str:pk>/", AttractionsViewSet.as_view()),  # Added trailing slash
+    path("chat/<str:pk>/", hotel_info_view),
+    path("chat/", hotel_info_view),
 ]
 

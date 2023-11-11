@@ -1,6 +1,6 @@
 from pathlib import Path
 from django.contrib.gis.utils import LayerMapping
-from .models import WorldBorder
+from .models import WorldBorder, Attractions
 
 world_mapping = {
     'fips' : 'FIPS',
@@ -17,8 +17,22 @@ world_mapping = {
     'mpoly' : 'MULTIPOLYGON',
 }
 
-world_shp = Path(__file__).resolve().parent / 'data' / 'TM_WORLD_BORDERS-0.3.shp'
+attractions_point_mapping = {
+    'name': 'Name',
+    'url': 'Url',
+    'telephone': 'Telephone',
+    'longitude': 'Longitude',
+    'latitude': 'Latitude',
+    'addressreg': 'AddressReg',
+    'addressloc': 'AddressLoc',
+    'addresscou': 'AddressCou',
+    'tags': 'Tags',
+    'geom': 'MULTIPOINT',
+}
+
+
+world_shp = Path(__file__).resolve().parent / 'data' / 'Attractions-point.shp'
 
 def run(verbose=True):
-    lm = LayerMapping(WorldBorder, world_shp, world_mapping, transform=False)
-    lm.save(strict=True, verbose=verbose)
+    lm = LayerMapping(Attractions, world_shp, attractions_point_mapping, transform=True)
+    lm.save(verbose=True)

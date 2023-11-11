@@ -43,6 +43,19 @@ class Hotel(models.Model):
     def __str__(self) -> str:
         return self.name
 
+class Attractions(models.Model):
+    name = models.CharField(max_length=80, null= True)
+    url = models.CharField(max_length=141, null= True)
+    telephone = models.CharField(max_length=80, null= True)
+    longitude = models.FloatField()
+    latitude = models.FloatField()
+    addressreg = models.CharField(max_length=80, null = True)
+    addressloc = models.CharField(max_length=80, null = True)
+    addresscou = models.CharField(max_length=80, null = True)
+    tags = models.CharField(max_length=254, null = True)
+    geom = models.MultiPointField(srid=4326, null = True)
+
+
 
 
 

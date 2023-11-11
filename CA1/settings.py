@@ -110,7 +110,7 @@ else:
 if docker_config.DEPLOY_SECURE:
     DEBUG = False
     TEMPLATES[0]["OPTIONS"]["debug"] = False
-    # ALLOWED_HOSTS = ['.your-domain-name.xyz', 'localhost',]
+    ALLOWED_HOSTS = ['ogulcansarioglu.site', 'localhost','www.ogulcansarioglu.site']
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
 else:
