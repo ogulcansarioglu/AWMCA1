@@ -1,12 +1,14 @@
 # AWMCA1
 Responsive Progressive Geolocation App built on postGIS and hosted on EC2 
 
-#AttractionFinger - ogulcansarioglu.site
+website: ogulcansarioglu.site
+
+# AttractionFinger - ogulcansarioglu.site
 
 This app allows users to find attractions (natural parks, museums etc) and get information about them using ChatGPT assistant, along with providing a link via Google Search. 
 The app uses a spatial database, and dataset from data.gov.ie (Irish Goverment)
 
-#Tech Stack
+# Tech Stack
 
 Database: PostgreSQL with PostGIS
 Database management: PgAdmin4
@@ -17,11 +19,11 @@ Responsive, Progressive Front-end: Bootstrap, Javascript, django-pwa
 Mapping: Leaflet JS with OpenStreetMap
 Deployment: AWS EC2, Docker (PostGis, PgAdmin4, Django App, Nginx)
 
-#Dataset
+# Dataset
 
 The dataset consist of attractions in Ireland provided by data.gov.ie. I created a model, migrate and load it into the database and keep it at persistent storage. 
 
-#Functionalities
+# Functionalities
 
 # 1. Search: 
 
@@ -67,10 +69,10 @@ b. Samsung S13, android:
 
 #Future
 
-Talk to a Virtual Asisstant to learn more about the attraction: I implemented the chatGPT functionality, but it needs to be Prompt Engineer for this special use-case which I didn't have enough time for (or else it will just chat about anything which shouldn't happen, it needs negative prompts to limit itself).
+The user will be able to responsively interact with virtualt assistant. I implemented the chatGPT functionality, but it needs to be Prompt Engineer for this special use-case which I didn't have enough time for (or else it will just chat about anything which shouldn't happen, it needs negative prompts to limit itself).
 So for now I just leave at testing mock-up response. 
 
-Find Hotels closer to the Attraction of your choice: I also want to retrieve hotels closers to these locations that one can stay after selecting an attraction, I build some of the back-end for that but I didn't have enough time to enable it in the app. 
+Users will be able to find hotels near to attractions of their chaice. I also want to retrieve hotels closers to these locations that one can stay after selecting an attraction, I build some of the back-end for that but I didn't have enough time to enable it in the app. 
 
 
 
