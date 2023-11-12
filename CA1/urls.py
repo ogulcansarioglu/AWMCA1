@@ -8,6 +8,7 @@ from world import views
 urlpatterns = [
     path('admin/',admin.site.urls),
     path('api/v1/',include('world.urls')),
+    path('api/v1/chat/', views.hotel_info_view, name='chat-api'),
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
     path('main/', TemplateView.as_view(template_name="main.html"), name="main"),
     path('index/', TemplateView.as_view(template_name="index.html"), name="index"),

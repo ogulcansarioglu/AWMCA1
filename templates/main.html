@@ -2,215 +2,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ParkFinder</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attraction Finder</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
     <!-- Make sure you put this AFTER Leaflet's CSS -->
- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
-  <!-- Your custom CSS -->
-  <style>
-      /* styles.css */
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <!-- Your custom CSS -->
+    <style>
+        /* styles.css */
 
-.sidebar {
-  height: 80vh;
-  width: 0;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  background-color: white;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px;
-}
+        .sidebar {
+            height: 80vh;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: white;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
 
-.sidebar a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
 
-.sidebar a:hover {
-  color: #f1f1f1;
-}
-</style>
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+    </style>
 
 </head>
 <body>
 
-  <header>
+<header>
     <!-- Navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">ParkFinder</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <!-- ... other navbar code ... -->
-            <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search Hotels" aria-label="Search" id="parkSearch" onkeyup="handleSearch()">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </nav>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">ParkFinder</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <!-- ... other navbar code ... -->
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search Hotels" aria-label="Search"
+                               id="parkSearch" onkeyup="handleSearch()">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </nav>
 
+            </div>
         </div>
-      </div>
     </nav>
-  </header>
+</header>
 
-  <main>
+<main>
     <!-- Main content area -->
     <div class="d-flex">
-     <div id="map" style="height: 80vh; width: 80vh;"></div>
-     <!-- Add this inside your index.html where the sidebar is defined -->
-    <div id="sidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <div id="hotelDetails" class="hotel-details">
-  </div>
-</div>
+        <div id="map" style="height: 80vh; width: 70vh; display: block;
+    margin-left: auto;
+    margin-right: auto"></div>
+        <div id="sidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <div id="hotelDetails" class="hotel-details">
+            </div>
+        </div>
+    </div>
+    </div>
 
-    <!-- Park details go here -->
-  </div>
-</div>
+</main>
 
-  </main>
-
-  <footer class="bg-light text-center text-lg-start">
+<footer class="bg-light text-center text-lg-start">
     <!-- Footer -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      © 2023 ParkFinder
+        © 2023 AttractionFinder
     </div>
-  </footer>
+</footer>
 
-  <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootlint@1.1.0/dist/browser/bootlint.min.js"></script>
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <!-- Your custom JS -->
-  <script>
-    var map = L.map('map').setView([51.505, -0.09], 13);
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootlint@1.1.0/dist/browser/bootlint.min.js"></script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- My Custom JS -->
+<script src="scripts.js"></script>
+<script>
+    var map = L.map('map').setView([53.3498, -6.2603], 6);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
+        maxZoom: 15,
+        attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
     function parseLatLngFromWKT(wkt) {
-      const match = wkt.match(/POINT \(([^ ]+) ([^ ]+)\)/);
-      if (match) {
-        const longitude = parseFloat(match[1]);
-        const latitude = parseFloat(match[2]);
-        return { latitude, longitude };
-      } else {
-        return null;
-      }
+        const match = wkt.match(/POINT \(([^ ]+) ([^ ]+)\)/);
+        if (match) {
+            const longitude = parseFloat(match[1]);
+            const latitude = parseFloat(match[2]);
+            return {latitude, longitude};
+        } else {
+            return null;
+        }
     }
 
-    function createAttLink(attName) {
-    var encodedHotelName = encodeURIComponent(attName);
-    var searchUrl = `https://www.google.com/search?q=${encodedHotelName}`;
-    return `<a href="${searchUrl}" target="_blank">${attName}</a>`;
-}
 
     var allMarkers = []; // Global array to store markers
 
     function addHotelMarkers(data) {
-      allMarkers.forEach(marker => map.removeLayer(marker));
-      allMarkers = [];
+        allMarkers.forEach(marker => map.removeLayer(marker));
+        allMarkers = [];
 
-     data.forEach(item => {
-    const latLng = parseLatLngFromWKT(item.location);
-    if (latLng) {
-      var marker = L.marker([latLng.latitude, latLng.longitude]).addTo(map)
-        .bindPopup(`<b>${item.name}</b><br>${item.address}<br> ${createAttLink(item.name, item.id)}`);
+        data.forEach(item => {
+            const latLng = parseLatLngFromWKT(item.location);
+            if (latLng) {
+                var marker = L.marker([latLng.latitude, latLng.longitude]).addTo(map)
+                    .bindPopup(`<b>${item.name}</b><br>${item.address}<br> ${createAttLink(item.name, item.id)}`);
 
-      allMarkers.push(marker);
-    } else {
-      console.error('Invalid LatLng data for item:', item);
-    }
-  });
+                allMarkers.push(marker);
+            } else {
+                console.error('Invalid LatLng data for item:', item);
+            }
+        });
     }
 
     function addAttMarkers(data) {
-      allMarkers.forEach(marker => map.removeLayer(marker));
-      allMarkers = [];
+        allMarkers.forEach(marker => map.removeLayer(marker));
+        allMarkers = [];
 
-     data.forEach(item => {
+        data.forEach(item => {
 
-      var marker = L.marker([item.latitude, item.longitude]).addTo(map)
-        .bindPopup(`<b>${item.name}</b><br>${item.addressloc}<br> ${createAttLink(item.name, item.id)}`);
+            var marker = L.marker([item.latitude, item.longitude]).addTo(map)
+                .bindPopup(`<b>${item.name}</b><br>${item.addressloc}<br> ${createAttLink(item.name, item.id)}`);
 
-      allMarkers.push(marker);
+            allMarkers.push(marker);
 
-  });
+        });
     }
 
     function handleSearch() {
-      var searchQuery = document.getElementById('parkSearch').value.toLowerCase();
+        var searchQuery = document.getElementById('parkSearch').value.toLowerCase();
 
-      fetch('/api/v1/att/')
-        .then(response => response.json())
-        .then(data => {
-          var filteredData = data.filter(item => item.name.toLowerCase().includes(searchQuery));
+        fetch('/api/v1/att/')
+            .then(response => response.json())
+            .then(data => {
+                var filteredData = data.filter(item => item.name.toLowerCase().includes(searchQuery));
 
-          if (filteredData.length > 0) {
-            const firstMatch = filteredData[0];
-            console.log(firstMatch)
+                if (filteredData.length > 0) {
+                    const firstMatch = filteredData[0];
+                    console.log(firstMatch)
 
-              map.setView([firstMatch.latitude, firstMatch.longitude], 15);
+                    map.setView([firstMatch.latitude, firstMatch.longitude], 15);
 
 
-            addAttMarkers(filteredData);
-          } else {
-            console.log('No matching att found');
-          }
-        })
-        .catch(error => console.error('Error fetching data:', error));
+                    addAttMarkers(filteredData);
+                } else {
+                    console.log('No matching att found');
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
     }
 
     fetch('/api/v1/hotels/')
-      .then(response => response.json())
-      .then(data => {
-        addHotelMarkers(data);
-      }).catch(error => console.error('Error fetching hotel data:', error));
+        .then(response => response.json())
+        .then(data => {
+            addHotelMarkers(data);
+        }).catch(error => console.error('Error fetching hotel data:', error));
 
     function closeNav() {
-      document.getElementById('sidebar').style.width = "0";
+        document.getElementById('sidebar').style.width = "0";
     }
 
     fetch('/api/v1/att/')
-      .then(response => response.json())
-      .then(data => {
-        addAttMarkers(data);
-      }).catch(error => console.error('Error fetching hotel data:', error));
+        .then(response => response.json())
+        .then(data => {
+            addAttMarkers(data);
+        }).catch(error => console.error('Error fetching hotel data:', error));
 
     function closeNav() {
-      document.getElementById('sidebar').style.width = "0";
+        document.getElementById('sidebar').style.width = "0";
     }
 
     // Updated createHotelLink function
-function createAttLink(hotelName, hotelId) {
-  var encodedHotelName = encodeURIComponent(hotelName);
-  var searchUrl = `https://www.google.com/search?q=${encodedHotelName}`;
-  return `<a href="${searchUrl}" target="_blank">${hotelName}</a> <br>
+    function createAttLink(hotelName, hotelId) {
+        var encodedHotelName = encodeURIComponent(hotelName);
+        var searchUrl = `https://www.google.com/search?q=${encodedHotelName}`;
+        return `<a href="${searchUrl}" target="_blank">${hotelName}</a> <br>
           <button onclick="showHotelDetails('${hotelId}')">Ask About This Attraction</button>`;
-}
+    }
 
-function showHotelDetails(hotelId) {
-    // Here, you can fetch hotel details using the hotelId if needed
-    var hotelDetailsHTML = `<h3>Attraction Details</h3>
+    function showHotelDetails(hotelId) {
+        // fetch hotel details using the hotelId if needed
+        var hotelDetailsHTML = `<h3>Attraction Details</h3>
                             <p>Details about the attraction...</p>
                             <h4>Ask a Question</h4>
                             <div id="chatContainer">
@@ -218,38 +215,41 @@ function showHotelDetails(hotelId) {
                               <input type="text" id="userInput" placeholder="Type your question..." style="width: 80%;">
                               <button onclick="sendChat()">Send</button>
                             </div>`;
-    document.getElementById('hotelDetails').innerHTML = hotelDetailsHTML;
-    document.getElementById('sidebar').style.width = '350px'; // Adjust width for chat
+        document.getElementById('hotelDetails').innerHTML = hotelDetailsHTML;
+        document.getElementById('sidebar').style.width = '350px'; // Adjust width for chat
 
-  }
-
-function sendChat() {
-  var input = document.getElementById('userInput').value;
-  document.getElementById('userInput').value = '';
-
-  var chatBox = document.getElementById('chatBox');
-  chatBox.innerHTML += `<div>User: ${input}</div>`;
-
-  fetch('/api/v1/chat/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: input })
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
     }
-    return response.json();
-  })
-  .then(data => {
-    chatBox.innerHTML += `<div>ChatGPT: ${data.response}</div>`;
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-  })
-  .catch(error => console.error('Error:', error));
-}
+
+    function sendChat() {
+        var input = document.getElementById('userInput').value;
+        document.getElementById('userInput').value = '';
+
+        var chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<div>User: ${input}</div>`;
+
+        fetch('/api/v1/chat/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({message: input}),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.log(response)
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                chatBox.innerHTML += `<div>ChatGPT: ${data.response}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
 
-  </script>
+
+
+</script>
 
 </body>
 </html>

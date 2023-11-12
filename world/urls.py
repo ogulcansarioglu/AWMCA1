@@ -8,7 +8,5 @@ urlpatterns = [
     path("hotels/<str:pk>/", HotelUpdateRetreiveView.as_view()),  # Added trailing slash
     path("att/", ListCreateViews.as_view()),  # Added trailing slash
     path("att/<str:pk>/", AttractionsViewSet.as_view()),  # Added trailing slash
-    path("chat/<str:pk>/", hotel_info_view),
-    path("chat/", hotel_info_view),
 ]
 
