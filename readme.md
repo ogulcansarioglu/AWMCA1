@@ -72,7 +72,7 @@ b. Samsung S13, android:
 The user will be able to responsively interact with virtualt assistant. I implemented the chatGPT functionality, but it needs to be Prompt Engineer for this special use-case which I didn't have enough time for (or else it will just chat about anything which shouldn't happen, it needs negative prompts to limit itself).
 So for now I just leave at testing mock-up response. 
 
-Users will be able to find hotels near to attractions of their chaice. I also want to retrieve hotels closers to these locations that one can stay after selecting an attraction, I build some of the back-end for that but I didn't have enough time to enable it in the app. 
+Users will be able to find hotels near to attractions of their chaice. I want to retrieve hotels closers to these locations that one can stay after selecting an attraction, I build some of the back-end for that but I didn't have enough time to enable it in the app. 
 
 
 
