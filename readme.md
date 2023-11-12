@@ -47,7 +47,7 @@ POST request via Postman or curl.
 Not an extra but I also implemented leaflet with openstreetmaps for geolacation amd map purposes that enables all the above. ]
 
 
-#Responstive Design
+#Responstive Design (Web Browser, Iphone, Android)
 
 1. Web Chrome:
 
@@ -67,7 +67,7 @@ b. Samsung S13, android:
 ![Abdriud](https://i.ibb.co/6F0myDq/Whats-App-Image-2023-11-12-at-12-31-01.jpg)
 
 
-#Future
+# Future
 
 The user will be able to responsively interact with virtualt assistant. I implemented the chatGPT functionality, but it needs to be Prompt Engineer for this special use-case which I didn't have enough time for (or else it will just chat about anything which shouldn't happen, it needs negative prompts to limit itself).
 So for now I just leave at testing mock-up response. 
