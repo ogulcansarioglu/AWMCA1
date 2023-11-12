@@ -139,7 +139,7 @@
             }
         });
     }
-
+    //populate the map with markers
     function addAttMarkers(data) {
         allMarkers.forEach(marker => map.removeLayer(marker));
         allMarkers = [];
@@ -153,7 +153,7 @@
 
         });
     }
-
+    //search and navigate to first result dynamically as user types
     function handleSearch() {
         var searchQuery = document.getElementById('parkSearch').value.toLowerCase();
 
@@ -186,7 +186,7 @@
     function closeNav() {
         document.getElementById('sidebar').style.width = "0";
     }
-
+    //fetch data from api
     fetch('/api/v1/att/')
         .then(response => response.json())
         .then(data => {
@@ -196,17 +196,15 @@
     function closeNav() {
         document.getElementById('sidebar').style.width = "0";
     }
-
-    // Updated createHotelLink function
+    //create google search link for attraction
     function createAttLink(hotelName, hotelId) {
         var encodedHotelName = encodeURIComponent(hotelName);
         var searchUrl = `https://www.google.com/search?q=${encodedHotelName}`;
         return `<a href="${searchUrl}" target="_blank">${hotelName}</a> <br>
           <button onclick="showHotelDetails('${hotelId}')">Ask About This Attraction</button>`;
     }
-
+    //show the details of attraction along with chatGPT virtual assistant implementation
     function showHotelDetails(hotelId) {
-        // fetch hotel details using the hotelId if needed
         var hotelDetailsHTML = `<h3>Attraction Details</h3>
                             <p>Details about the attraction...</p>
                             <h4>Ask a Question</h4>
@@ -219,7 +217,7 @@
         document.getElementById('sidebar').style.width = '350px'; // Adjust width for chat
 
     }
-
+    //virtual assistant
     function sendChat() {
         var input = document.getElementById('userInput').value;
         document.getElementById('userInput').value = '';
