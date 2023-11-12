@@ -10,14 +10,14 @@ The app uses a spatial database, and dataset from data.gov.ie (Irish Goverment)
 
 # Tech Stack
 
-Database: PostgreSQL with PostGIS
-Database management: PgAdmin4
-Middle tier(s): Django
-API Dev: Rest-Framework for Django
-AI: open-ai 
-Responsive, Progressive Front-end: Bootstrap, Javascript, django-pwa
-Mapping: Leaflet JS with OpenStreetMap
-Deployment: AWS EC2, Docker (PostGis, PgAdmin4, Django App, Nginx)
+1. Database: PostgreSQL with PostGIS
+2. Database management: PgAdmin4
+3. Middle tier(s): Django
+4. API Dev: Rest-Framework for Django
+5. AI: open-ai 
+6. Responsive, Progressive Front-end: Bootstrap, Javascript, django-pwa
+7. Mapping: Leaflet JS with OpenStreetMap
+8. Deployment: AWS EC2, Docker (PostGis, PgAdmin4, Django App, Nginx)
 
 # Dataset
 
@@ -42,7 +42,7 @@ You can ask any question about the attraction in a persistent chat with ChatGPT4
 You can navigate to ogulcansarioglu.site/api/v1/att/ to see the RestAPI that I built for it, populated from the database and used in map creation. I also have ogulcansarioglu.site/api/v1/chat/ which is functionality based so won't be rendering anything but you can send
 POST request via Postman or curl. 
 
-#5. Leaflet Map
+# 5. Leaflet Map
 
 Not an extra but I also implemented leaflet with openstreetmaps for geolacation amd map purposes that enables all the above. ]
 
