@@ -1,7 +1,7 @@
 # AWMCA1
 Responsive Progressive Geolocation App built on postGIS and hosted on EC2 
 
-website: ogulcansarioglu.site
+website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end when navigating as I disabled append_slahs (APPEND_SLASH = False)) 
 
 # AttractionFinger - ogulcansarioglu.site
 
@@ -42,9 +42,15 @@ You can ask any question about the attraction in a persistent chat with ChatGPT4
 You can navigate to ogulcansarioglu.site/api/v1/att/ to see the RestAPI that I built for it, populated from the database and used in map creation. I also have ogulcansarioglu.site/api/v1/chat/ which is functionality based so won't be rendering anything but you can send
 POST request via Postman or curl. 
 
+![api-page](https://i.ibb.co/2vNJdqn/Whats-App-Image-2023-11-12-at-12-51-05.jpg)
+
 # 5. Leaflet Map
 
 Not an extra but I also implemented leaflet with openstreetmaps for geolacation amd map purposes that enables all the above. ]
+
+# 6. PgAdmin4
+
+![pgadmin4-page](https://i.ibb.co/p2LgNBR/Whats-App-Image-2023-11-12-at-12-50-33.jpg)
 
 
 #Responstive Design (Web Browser, Iphone, Android)
