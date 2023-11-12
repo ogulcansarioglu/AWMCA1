@@ -5,6 +5,8 @@ website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end w
 
 demo: [video demo:https://youtu.be/-8cSagH8g7I](https://youtu.be/-8cSagH8g7I)
 
+note: html template is: main.html, not index.html
+
 # AttractionFinger - ogulcansarioglu.site
 
 This app allows users to find attractions (natural parks, museums etc) and get information about them using ChatGPT assistant, along with providing a link via Google Search. 
