@@ -1,7 +1,7 @@
 # AWMCA1
 Responsive Progressive Geolocation App built on postGIS and hosted on EC2 
 
-website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end when navigating as I disabled append_slahs (APPEND_SLASH = False)) 
+website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end when navigating as I disabled append_slahs (APPEND_SLASH = False) like /api/v1/att/) 
 
 # AttractionFinger - ogulcansarioglu.site
 
