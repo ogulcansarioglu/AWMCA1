@@ -1,7 +1,13 @@
 {% load static %}
+{% load pwa %}
+
+
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
+
+{% progressive_web_app_meta %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attraction Finder</title>
@@ -47,6 +53,7 @@
 
 </head>
 <body>
+
 
 <header>
     <!-- Navigation bar -->
@@ -100,9 +107,74 @@
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <!-- My Custom JS -->
-<script src="scripts.js"></script>
+
 <script>
-    var map = L.map('map').setView([53.3498, -6.2603], 6);
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/serviceWorker.js').then(function(registration) {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+        // ... existing code ...
+
+{% comment %}
+    // Fetch traffic data from API
+    function fetchTrafficData(lat, lon) {
+        fetch(`/api/traffic_data?lat=${lat}&lon=${lon}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Clear existing traffic data
+                if (window.trafficLayer) {
+                    window.trafficLayer.clearLayers();
+                }
+    
+                // Create a new layer group for the traffic data
+                window.trafficLayer = L.layerGroup().addTo(map);
+    
+                // Add a marker for each traffic incident
+                data.forEach(incident => {
+                    var lat = incident.lat;
+                    var lon = incident.lon;
+                    var description = incident.description;
+    
+                    L.marker([lat, lon]).addTo(window.trafficLayer)
+                        .bindPopup(`<b>${description}</b>`);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching traffic data:', error);
+            });
+    }
+{% endcomment %}
+
+// ... existing code ...
+var map = L.map('map').setView([53.3498, -6.2603], 6);
+// Update map view event
+map.on('moveend', function() {
+    var center = map.getCenter();
+    fetchTrafficData(center.lat, center.lng);
+});
+
+// ... existing code ...
+
+
+
+{% comment %}
+        // Fetch traffic data if zoom level is above a certain threshold
+        if (zoomLevel > 10) { // Adjust the zoom level threshold as needed
+            fetchTrafficData(center.lat, center.lng);
+        }
+{% endcomment %}
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 15,
@@ -119,6 +191,7 @@
             return null;
         }
     }
+
 
 
     var allMarkers = []; // Global array to store markers
@@ -156,19 +229,21 @@
     //search and navigate to first result dynamically as user types
     function handleSearch() {
         var searchQuery = document.getElementById('parkSearch').value.toLowerCase();
-
+    
         fetch('/api/v1/att/')
             .then(response => response.json())
             .then(data => {
                 var filteredData = data.filter(item => item.name.toLowerCase().includes(searchQuery));
-
+    
                 if (filteredData.length > 0) {
                     const firstMatch = filteredData[0];
                     console.log(firstMatch)
-
+    
                     map.setView([firstMatch.latitude, firstMatch.longitude], 15);
-
-
+    
+                    // Fetch and display traffic data
+                    // fetchTrafficData(firstMatch.latitude, firstMatch.longitude);
+    
                     addAttMarkers(filteredData);
                 } else {
                     console.log('No matching att found');
