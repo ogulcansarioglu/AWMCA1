@@ -13,6 +13,7 @@ import socket
 from pathlib import Path
 import os
 
+
 import docker_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +28,9 @@ SECRET_KEY = 'django-insecure-s3x^x&w(_t(zw-@$70-4o*gck9l1x0rb67pyn59!0s$=0c7r65
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ogulcansarioglu.site','www.ogulcansarioglu.site']
+ALLOWED_HOSTS = ['ogulcansarioglu.site', 'www.ogulcansarioglu.site']
+
+TOMTOM_API_KEY = os.getenv('WdGkJxuNyswDkSGQRApoMUVzmO5THe54')
 
 # Application definition
 APPEND_SLASH = False
@@ -98,6 +101,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
+
 if socket.gethostname() == 'DESKTOP-K0HEPH2':
     print("Hey Inside!")
     DATABASES["default"]["HOST"] = "localhost"
@@ -110,7 +114,8 @@ else:
 if docker_config.DEPLOY_SECURE:
     DEBUG = False
     TEMPLATES[0]["OPTIONS"]["debug"] = False
-    ALLOWED_HOSTS = ['ogulcansarioglu.site', 'localhost','www.ogulcansarioglu.site']
+    ALLOWED_HOSTS = ['ogulcansarioglu.site',
+                     'localhost', 'www.ogulcansarioglu.site']
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
 else:
@@ -187,6 +192,10 @@ PWA_APP_ICONS = [
     {
         'src': '/static/images/icons/icon-96x96.png',
         'sizes': '160x160'
+    },
+    {
+        'src': '/static/images/icons/icon-144x144.png',
+        'sizes': '144x144'
     }
 ]
 PWA_APP_ICONS_APPLE = [
@@ -212,8 +221,8 @@ PWA_APP_SHORTCUTS = [
 ]
 PWA_APP_SCREENSHOTS = [
     {
-      'src': '/static/images/icons/splash-750x1334.png',
-      'sizes': '750x1334',
-      "type": "image/png"
+        'src': '/static/images/icons/splash-750x1334.png',
+        'sizes': '750x1334',
+        "type": "image/png"
     }
 ]
