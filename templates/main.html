@@ -6,7 +6,8 @@
 <html lang="en">
 {% load static %}
 <head>
-
+    <link rel="stylesheet" href="{% static 'leaflet-plugins/leaflet-pulse-icon.css' %}">
+    <script src="{% static 'leaflet-plugins/leaflet-pulse-icon.js' %}"></script>
 {% progressive_web_app_meta %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,6 +25,66 @@
     <style>
         /* styles.css */
 
+        <style>
+            /* Base styles for the mobile travel plan */
+#mobile-travel-plan {
+    display: none; /* Hidden by default */
+    background-color: #f7f7f7; /* Or any color that fits your design */
+    padding: 10px;
+    margin: 0 auto; /* Center the container */
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    #mobile-travel-plan {
+        display: block; /* Show only on mobile */
+    }
+
+    #right-panel {
+        display: none; /* Hide the sidebar travel plan on mobile */
+    }
+
+    /* Adjust the map height to make space for the travel plan on mobile */
+    #map {
+        height: calc(100vh - 50px - 150px); /* Adjust 50px for the travel plan height and 150px for the navbar and footer */
+    }
+}
+            .mode-button.active {
+                background-color: blue;
+                color: white;
+            }
+
+            .mode-button.active {
+                background-color: green;
+                color: white;
+            }
+        
+        
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-20px); }
+                60% { transform: translateY(-15px); }
+            }
+        
+            .animated-marker {
+                animation: bounce 1s infinite;
+            }
+
+            #transport-modes button {
+                margin: 5px;
+                padding: 10px;
+                background-color: lightgray;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            
+            #transport-modes button.active {
+                background-color: blue;
+                color: white;
+            }
+   
+
         .sidebar {
             height: 80vh;
             width: 0;
@@ -35,6 +96,15 @@
             overflow-x: hidden;
             transition: 0.5s;
             padding-top: 60px;
+        }
+
+    
+        .attraction-panel {
+            width: 20%;
+            overflow-y: auto;
+            background-color: #f7f7f7;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         .sidebar a {
@@ -49,6 +119,46 @@
         .sidebar a:hover {
             color: #f1f1f1;
         }
+
+        /* Base styles for the header */
+header .navbar {
+    background-color: #ADD8E6; /* Light blue background */
+}
+
+@media (max-width: 768px) {
+    /* Make sure the content area is a column flex container */
+    #content-area {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Make the map take up a reasonable amount of space */
+    #map-container {
+        height: 50vh; /* Adjust height of map for mobile devices */
+        width: 100%; /* Full width */
+    }
+
+    /* Hide the selected attractions list on mobile */
+    #selected-attractions-list {
+        display: none;
+    }
+
+    /* Style for the mobile travel plan when it appears */
+    #mobile-travel-plan {
+        order: 2; /* This will ensure it's placed after the map */
+        display: block; /* It starts off hidden until a plan is made */
+        background-color: #f7f7f7; /* Sample background color */
+        padding: 10px;
+        margin-top: 10px; /* Add some space between the map and the plan */
+    }
+    
+    /* Adjust footer styling if needed */
+    footer {
+        order: 3; /* Footer comes last */
+        width: 100%;
+    }
+}
+
     </style>
 
 </head>
@@ -59,7 +169,14 @@
     <!-- Navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
+
             <a class="navbar-brand" href="#">ParkFinder</a>
+            <button id="make-travel-plan-btn" class="btn btn-primary" onclick="toggleTravelPlanMode()">Make a Travel Plan</button>
+            <div id="transport-modes" style="padding: 10px;">
+                <button id="mode-car" class="mode-button">Car</button>
+                <button id="mode-bike" class="mode-button">Bike</button>
+                <button id="mode-walk" class= "mode-button">Walk</button>
+            </div>   
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -68,7 +185,7 @@
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <!-- ... other navbar code ... -->
                     <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search Hotels" aria-label="Search"
+                        <input class="form-control me-2" type="search" placeholder="Search Attractions" aria-label="Search"
                                id="parkSearch" onkeyup="handleSearch()">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
@@ -82,15 +199,23 @@
 <main>
     <!-- Main content area -->
     <div class="d-flex">
+
+        <div id="left-panel" class="attraction-panel"></div>
+
         <div id="map" style="height: 80vh; width: 70vh; display: block;
     margin-left: auto;
     margin-right: auto"></div>
+    <div id="right-panel" class="attraction-panel"></div>
+
+    <ul id="selected-attractions-list"></ul>
         <div id="sidebar" class="sidebar">
+     
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <div id="hotelDetails" class="hotel-details">
             </div>
         </div>
     </div>
+
     </div>
 
 </main>
@@ -109,6 +234,7 @@
 <!-- My Custom JS -->
 
 <script>
+    var currentMode = 'driving-car'; // Default mode
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('/serviceWorker.js').then(function(registration) {
@@ -120,52 +246,9 @@
             });
         });
     }
-        // ... existing code ...
+    var map = L.map('map').setView([53.3498, -6.2603], 6);
 
-{% comment %}
-    // Fetch traffic data from API
-    function fetchTrafficData(lat, lon) {
-        fetch(`/api/traffic_data?lat=${lat}&lon=${lon}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Clear existing traffic data
-                if (window.trafficLayer) {
-                    window.trafficLayer.clearLayers();
-                }
-    
-                // Create a new layer group for the traffic data
-                window.trafficLayer = L.layerGroup().addTo(map);
-    
-                // Add a marker for each traffic incident
-                data.forEach(incident => {
-                    var lat = incident.lat;
-                    var lon = incident.lon;
-                    var description = incident.description;
-    
-                    L.marker([lat, lon]).addTo(window.trafficLayer)
-                        .bindPopup(`<b>${description}</b>`);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching traffic data:', error);
-            });
-    }
-{% endcomment %}
-
-// ... existing code ...
-var map = L.map('map').setView([53.3498, -6.2603], 6);
-// Update map view event
-map.on('moveend', function() {
-    var center = map.getCenter();
-    fetchTrafficData(center.lat, center.lng);
-});
-
-// ... existing code ...
+    var mode = "car";
 
 
 
@@ -192,6 +275,38 @@ map.on('moveend', function() {
         }
     }
 
+var isTravelPlanMode = false;
+var selectedAttractions = [];
+var userLocation;
+
+function toggleTravelPlanMode() {
+    isTravelPlanMode = !isTravelPlanMode;
+    document.getElementById('make-travel-plan-btn').innerText = isTravelPlanMode ? "Finish" : "Make a Travel Plan";
+    if (!isTravelPlanMode) {
+        // User finished selecting attractions
+        buildOptimizedRoute();
+    }
+}
+
+function attractionClicked(attraction) {
+    if (!isTravelPlanMode || selectedAttractions.length >= 5) return;
+    selectedAttractions.push(attraction);
+    // Optionally: Highlight the selected marker
+}
+
+
+
+
+
+    function drawLineToClosestAttraction(userLocation, attraction) {
+        var latlngs = [
+            [userLocation.lat, userLocation.lng],
+            [attraction.latitude, attraction.longitude]
+        ];
+    
+        var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
+        map.fitBounds(polyline.getBounds());
+    }
 
 
     var allMarkers = []; // Global array to store markers
@@ -204,7 +319,7 @@ map.on('moveend', function() {
             const latLng = parseLatLngFromWKT(item.location);
             if (latLng) {
                 var marker = L.marker([latLng.latitude, latLng.longitude]).addTo(map)
-                    .bindPopup(`<b>${item.name}</b><br>${item.address}<br> ${createAttLink(item.name, item.id)}`);
+                    .bindPopup(`<b>${item.name}</b><br>${item.address}<br> ${createAttLink(item.name, item.id, latLng.latitude, latLng.longitude)}`);
 
                 allMarkers.push(marker);
             } else {
@@ -216,14 +331,11 @@ map.on('moveend', function() {
     function addAttMarkers(data) {
         allMarkers.forEach(marker => map.removeLayer(marker));
         allMarkers = [];
-
+    
         data.forEach(item => {
-
             var marker = L.marker([item.latitude, item.longitude]).addTo(map)
-                .bindPopup(`<b>${item.name}</b><br>${item.addressloc}<br> ${createAttLink(item.name, item.id)}`);
-
+                .bindPopup(createAttLink(item.name, item.id, item.latitude, item.longitude));
             allMarkers.push(marker);
-
         });
     }
     //search and navigate to first result dynamically as user types
@@ -272,16 +384,33 @@ map.on('moveend', function() {
         document.getElementById('sidebar').style.width = "0";
     }
     //create google search link for attraction
-    function createAttLink(hotelName, hotelId) {
-        var encodedHotelName = encodeURIComponent(hotelName);
-        var searchUrl = `https://www.google.com/search?q=${encodedHotelName}`;
-        return `<a href="${searchUrl}" target="_blank">${hotelName}</a> <br>
-          <button onclick="showHotelDetails('${hotelId}')">Ask About This Attraction</button>`;
+    function createAttLink(attractionName, attractionId, attractionLat, attractionLng) {
+        var encodedName = encodeURIComponent(attractionName);
+        var searchUrl = `https://www.google.com/search?q=${encodedName}`;
+        return `<a href="${searchUrl}" target="_blank">${attractionName}</a> <br>
+                <button onclick="addToTravelPlan('${attractionName}', ${attractionId}, ${attractionLat}, ${attractionLng})">Add to Travel Plan</button>`;
     }
+    function addToTravelPlan(name, id, lat, lng) {
+        if (selectedAttractions.length >= 5 || !isTravelPlanMode) return;
+        selectedAttractions.push({ name, id, lat, lng });
+        // Update UI to reflect the addition (optional)
+        updateSelectedAttractionsUI();
+    }
+    function updateSelectedAttractionsUI() {
+        const selectedList = document.getElementById('selected-attractions-list');
+        if (selectedList) { // Check if the element exists
+            selectedList.innerHTML = '';
+            selectedAttractions.forEach((attraction, index) => {
+                selectedList.innerHTML += `<li>${index + 1}. ${attraction.name}</li>`;
+            });
+        }
+    }
+    
     //show the details of attraction along with chatGPT virtual assistant implementation
     function showHotelDetails(hotelId) {
         var hotelDetailsHTML = `<h3>Attraction Details</h3>
                             <p>Details about the attraction...</p>
+                            <button onclick="sendChat()">Add to the Travel Plan</button>
                             <h4>Ask a Question</h4>
                             <div id="chatContainer">
                               <div id="chatBox" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
@@ -319,6 +448,432 @@ map.on('moveend', function() {
             .catch(error => console.error('Error:', error));
     }
 
+
+    function createAnimatedMarker(lat, lng, popupContent) {
+        // Log the latitude and longitude values
+        console.log("Creating animated marker at:", lat, lng);
+    
+        // Check if latitude and longitude are valid
+        if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) {
+            console.error("Invalid coordinates for marker:", lat, lng);
+            return; // Don't create a marker if coordinates are invalid
+        }
+    
+        var icon = L.divIcon({
+            className: 'animated-marker',
+            html: '<div style="background-color:red; width: 10px; height: 10px; border-radius: 50%; animation: bounce 1s infinite;"></div>',
+            iconSize: [1000, 1000],
+            iconAnchor: [5, 5]
+        });
+
+        var animatedIcon = L.divIcon({
+            html: '<div style="background-color:red; width: 10px; height: 10px; border-radius: 50%; animation: bounce 1s infinite;">',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            className: ''
+        });
+    
+        var marker = L.marker([lat, lng], { icon: animatedIcon }).addTo(map);
+        marker.bindPopup(popupContent);
+    
+    }
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    // Haversine formula to calculate the distance between two points on the Earth
+    var R = 6371; // Radius of the Earth in km
+    var dLat = deg2rad(lat2-lat1);
+    var dLon = deg2rad(lon2-lon1);
+    var a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI/180)
+}
+
+
+function animateClosestLocations(userLocation, attractions) {
+    var attractionsWithDistance = attractions.map(function(attraction) {
+        attraction.distance = calculateDistance(userLocation.lat, userLocation.lng, attraction.latitude, attraction.longitude);
+        return attraction;
+    });
+
+    console.log("Attractions with distance:", attractionsWithDistance);
+
+    attractionsWithDistance.sort(function(a, b) {
+        return a.distance - b.distance;
+    });
+
+    updateAttractionPanels(userLocation,attractions);
+
+    // Animate only the 5 closest attractions
+    attractionsWithDistance.slice(0, 5).forEach(function(attraction) {
+        var popupContent = `<b>${attraction.name}</b><br>Distance: ${attraction.distance.toFixed(2)} km`;
+        createAnimatedMarker(attraction.latitude, attraction.longitude, popupContent);
+        drawLineToClosestAttraction(userLocation, attraction);
+       
+    });
+}
+
+function markAndAnimateUserLocation() {
+    var mode = '';
+    if (currentMode === 'driving-car') {
+        var mode = 'car';
+    } else if (currentMode === 'cycling-regular') {
+        var mode = 'bike';
+    } else if (currentMode === 'foot-walking') {
+        var mode = 'walk';
+    } else {
+        var mode = '';
+    }
+
+    highlightActiveModeButton(mode);
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+            L.marker([userLocation.lat, userLocation.lng]).addTo(map).bindPopup("You are here!");
+
+            fetch('/api/v1/att/')
+                .then(response => response.json())
+                .then(data => {
+                    const closestAttraction = findClosestAttraction(userLocation, data);
+                    if (closestAttraction) {
+                        console.log("Closest attraction:", closestAttraction.latitude, closestAttraction.longitude)
+                        fetchAndDisplayRoute(userLocation, closestAttraction);
+                        animateClosestLocations(userLocation, data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }, function(error) {
+            console.error("Geolocation error:", error);
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+
+
+
+function fetchAndDisplayRoute(start, end) {
+    const apiKey = 'pk.eyJ1Ijoib2xjaSIsImEiOiJjbHFwanhzem4wdnhyMmlzYjFnOTE5Y2tvIn0.qhbMjUn7UUJ9hpNu0vCbXg';
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start.lng},${start.lat};${end.longitude},${end.latitude}?geometries=geojson&access_token=${apiKey}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.routes.length > 0) {
+                const route = data.routes[0]; // Select the first route
+                const latLngs = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                L.polyline(latLngs, { color: 'green' }).addTo(map);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+function updateAttractionPanels(userLocation, attractions) {
+    const leftPanel = document.getElementById('left-panel');
+    const rightPanel = document.getElementById('right-panel');
+
+    leftPanel.innerHTML = '';
+    rightPanel.innerHTML = '';
+
+    const processPanel = (attraction, panel) => {
+        const div = document.createElement('div');
+        div.innerHTML = `<h4>${attraction.name}</h4><p>Distance: ${attraction.distance.toFixed(2)} km</p>`;
+        panel.appendChild(div);
+
+        // Fetch route info for the current mode and append to the panel
+        //fetchAndDisplayRouteInfo(userLocation, attraction, currentMode, div);
+    };
+
+    attractions.slice(0, 5).forEach(attraction => processPanel(attraction, leftPanel));
+    attractions.slice(5, 10).forEach(attraction => processPanel(attraction, rightPanel));
+}
+
+function fetchAndDisplayRouteInfo(start, end, mode, container) {
+    const apiKey = 'pk.eyJ1Ijoib2xjaSIsImEiOiJjbHFwanhzem4wdnhyMmlzYjFnOTE5Y2tvIn0.qhbMjUn7UUJ9hpNu0vCbXg'; // Replace with your actual API key
+    const url = `https://api.openrouteservice.org/v2/directions/${mode}/geojson?api_key=${apiKey}&start=${start.lng},${start.lat}&end=${end.longitude},${end.latitude}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.features && data.features.length > 0) {
+                const route = data.features[0].properties.summary;
+                const travelTime = (route.duration / 60).toFixed(2); // Convert to minutes
+                const details = document.createElement('p');
+                details.innerHTML = `Mode: ${mode}, Travel Time: ${travelTime} minutes`;
+                container.appendChild(details);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+function findClosestAttraction(userLocation, attractions) {
+    let closestAttraction = null;
+    let minDistance = Infinity;
+
+    console.log("User location:", userLocation);
+    console.log("Attractions:", attractions);
+
+    attractions.forEach(attraction => {
+        console.log("Checking attraction:", attraction);
+        if (attraction.latitude && attraction.longitude) {
+            const distance = calculateDistance(userLocation.lat, userLocation.lng, attraction.latitude, attraction.longitude);
+            console.log("Distance to attraction:", distance);
+            if (distance < minDistance) {
+                closestAttraction = attraction;
+                minDistance = distance;
+            }
+        }
+    });
+
+    console.log("Closest Attraction:", closestAttraction);
+    return closestAttraction;
+}
+
+function updateRoutesForMode(mode) {
+    currentMode = {% if mode %}"{{ mode }}"{% else %}"car"{% endif %};
+    console.log("Current mode:", currentMode);
+    switch (mode) {
+        case 'driving-car':
+            mode = 'car';
+            break;
+        case 'cycling-regular':
+            mode = 'bike';
+            break;
+        case 'foot-walking':
+            mode = 'walk';
+            break;
+        default:
+            // Handle default case here
+            break;
+    }
+    console.log("Mode:", mode);
+    document.querySelectorAll('.mode-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    let modeButtonId = 'mode-' + mode;
+    console.log("Mode button ID:", modeButtonId);
+    let modeButton = document.getElementById(modeButtonId);
+    
+    if (modeButton) {
+        modeButton.classList.add('active');
+    } else {
+        console.error('Button not found: ' + modeButtonId);
+    }
+
+    map.eachLayer(layer => {
+        if (layer instanceof L.Polyline) {
+            map.removeLayer(layer); // Clear existing routes
+        }
+    });
+
+    markAndAnimateUserLocation(); 
+}
+
+function highlightActiveModeButton(mode) {
+    // Clear previous active class
+    document.querySelectorAll('.mode-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Add active class to the current mode button
+    let modeButtonId = 'mode-' + mode;
+    let modeButton = document.getElementById(modeButtonId);
+    if (modeButton) {
+        modeButton.classList.add('active');
+    } else {
+        console.error('Button not found: ' + modeButtonId);
+    }
+}
+
+function buildTravelRoute() {
+    var totalDistance = 0;
+    var totalTime = 0;
+    var travelPlanDetails = [];
+
+    function calculateNextLeg(startIndex) {
+        if (startIndex >= selectedAttractions.length) {
+            // Finished calculating all legs
+            displayTravelPlan(travelPlanDetails, totalDistance, totalTime);
+            return;
+        }
+
+        var start = startIndex === 0 ? userLocation : selectedAttractions[startIndex - 1];
+        var end = selectedAttractions[startIndex];
+        console.log("user location", userLocation)
+        console.log("end", end)
+        fetchRoute(userLocation, end, currentMode)
+            .then(route => {
+                totalDistance += route.distance;
+                totalTime += route.duration;
+                travelPlanDetails.push({
+                    attraction: end,
+                    distance: route.distance,
+                    duration: route.duration
+                });
+                calculateNextLeg(startIndex + 1);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    calculateNextLeg(0);
+}
+
+
+function displayTravelPlan(planDetails, totalDistance, totalTime) {
+    // Create a container for the mobile travel plan if it doesn't exist
+    let mobileTravelPlan = document.getElementById('selected-attractions-list');
+    if (!mobileTravelPlan) {
+        mobileTravelPlan = document.createElement('div');
+        mobileTravelPlan.id = 'selected-attractions-list';
+    }
+
+    // Calculate traffic status
+    trafficStatus = planDetails.trafficDelay > 100 ? 'High' : 'Low'; // Calculate trafficStatus based on trafficDelay
+
+    // Populate the mobile travel plan HTML
+    mobileTravelPlan.innerHTML = `<h3>Travel Plan</h3>
+                                  <p>Total Time: ${totalTime.toFixed(2)} minutes</p>
+                                  <p>Mode: ${currentMode}</p>
+                                  <p>Total Distance: ${totalDistance.toFixed(2)} km</p>
+                                  <p>Traffic Status: ${trafficStatus}</p>`;
+    planDetails.forEach((detail, index) => {
+        mobileTravelPlan.innerHTML += `<div>
+                                           <h4>${index + 1}. ${detail.attraction.name}</h4>
+                                           <p>Distance: ${detail.distance.toFixed(2)} km</p>
+                                           <p>Duration: ${detail.duration.toFixed(2)} minutes</p>
+                                       </div>`;
+    });
+
+}
+
+markAndAnimateUserLocation();
+
+document.addEventListener('DOMContentLoaded', function() {
+    var navbarToggler = document.getElementById('navbar-toggler');
+    if (navbarToggler) {
+        navbarToggler.addEventListener('click', function() {
+            var transportModes = document.getElementById('transport-modes');
+            var navbarNav = document.getElementById('navbarNav');
+            if (transportModes && navbarNav) {
+                transportModes.classList.toggle('active');
+                navbarNav.classList.toggle('active');
+            }
+        });
+    }
+    // Event listeners for mode buttons
+    document.getElementById('mode-car').addEventListener('click', () => {
+        currentMode = 'driving-car';
+        highlightActiveModeButton('car');
+        updateRoutesForMode(currentMode);
+    });
+    document.getElementById('mode-bike').addEventListener('click', () => {
+        currentMode = 'cycling-regular';
+        highlightActiveModeButton('bike');
+        updateRoutesForMode(currentMode);
+    });
+    document.getElementById('mode-walk').addEventListener('click', () => {
+        currentMode = 'foot-walking';
+        highlightActiveModeButton('walk');
+        updateRoutesForMode(currentMode);
+    });
+});
+
+function fetchRoute(start, end, mode) {
+    const apiKey = 'pk.eyJ1Ijoib2xjaSIsImEiOiJjbHFwanhzem4wdnhyMmlzYjFnOTE5Y2tvIn0.qhbMjUn7UUJ9hpNu0vCbXg';
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start.lng},${start.lat};${end.lng},${end.lat}?geometries=geojson&access_token=${apiKey}`;
+
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Extract route information from response data
+            console.log("Route data:", data)
+            const route = data.routes[0]; // Select the first route
+            const traffic = route.weight
+            const trafficDelay = route.weight - route.duration
+            const latLngs = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+            L.polyline(latLngs, { color: 'green' }).addTo(map);
+            const distance = route.distance // Distance in meters
+            const duration = route.duration// Duration in seconds
+            return {
+                coordinates: latLngs,
+                distance: distance / 1000, // Convert to kilometers
+                duration: duration / 60, // Convert to minutes
+                trafficDelay: trafficDelay /60
+            };
+        });
+}
+
+function buildOptimizedRoute() {
+    // Ensure we have the user's current location
+    if (!userLocation) {
+        alert('User location is not available.');
+        return;
+    }
+
+    // This will store the total distance and time of the travel plan
+    let totalDistance = 0;
+    let totalTime = 0;
+    let travelPlanDetails = [{
+        attraction: {
+            name: "Your Location",
+            lat: userLocation.lat,
+            lng: userLocation.lng
+        },
+        distance: 0,
+        duration: 0
+    }];
+
+    // Function to recursively calculate the route for each leg
+    function calculateNextLeg(startIndex, previousAttraction) {
+        if (startIndex >= selectedAttractions.length) {
+            // Base case: we are done
+            displayTravelPlan(travelPlanDetails, totalDistance, totalTime);
+            return;
+        }
+
+        // Current attraction
+        let currentAttraction = selectedAttractions[startIndex];
+
+        // Fetch the route from the previous attraction to the current one
+        fetchRoute(previousAttraction, currentAttraction, currentMode)
+            .then(route => {
+                totalDistance += route.distance;
+                totalTime += route.duration;
+                travelPlanDetails.push({
+                    attraction: currentAttraction,
+                    distance: route.distance,
+                    duration: route.duration,
+                    trafficDelay: route.trafficDelay
+                });
+
+                // Call the function for the next leg
+                calculateNextLeg(startIndex + 1, currentAttraction);
+            })
+            .catch(error => {
+                console.error('Error fetching route:', error);
+            });
+    }
+
+    // Start calculating from the user's location to the first attraction
+    calculateNextLeg(0, { lat: userLocation.lat, lng: userLocation.lng });
+}
 
 
 

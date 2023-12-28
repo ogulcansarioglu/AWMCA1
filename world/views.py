@@ -1,3 +1,7 @@
+from django.contrib.gis.db.models.functions import Distance
+from django.http import JsonResponse
+from geopy.distance import geodesic
+from .traffic import get_traffic_data
 import requests
 from django.views.static import serve
 from rest_framework import viewsets
@@ -102,27 +106,20 @@ class ListCreateViews(generics.ListCreateAPIView):
         pnt = Point(lng, lat)
         print(pnt)
         serializer.save(location=pnt)
-from django.http import JsonResponse
-from .traffic import get_traffic_data
-from geopy.distance import geodesic
-
 
 
 def traffic_view(request, lat, lon):
     lat = request.GET.get('lat')
     lon = request.GET.get('lon')
 
-    if not lat or not lon:
-        return HttpResponseBadRequest("Missing latitude or longitude parameters")
+    # Ensure both latitude and longitude are provided
+    if lat is None or lon is None:
+        return JsonResponse({'error': 'Missing lat and/or lon parameters'}, status=400)
 
-    try:
-        lat = float(lat)
-        lon = float(lon)
-    except ValueError:
-        return HttpResponseBadRequest("Invalid latitude or longitude values")
-
+    # Fetch the traffic data and return as JSON
     traffic_data = get_traffic_data(lat, lon)
     return JsonResponse(traffic_data)
+
 
 def get_traffic_data(lat, lon):
     tomtom_api_key = 'WdGkJxuNyswDkSGQRApoMUVzmO5THe54'
@@ -136,11 +133,16 @@ def get_traffic_data(lat, lon):
     else:
         return {"error": "Failed to fetch traffic data"}
 
+
 def calculate_bbox(latitude, longitude, radius):
-    north = geodesic(meters=radius).destination((latitude, longitude), 0).latitude
-    south = geodesic(meters=radius).destination((latitude, longitude), 180).latitude
-    east = geodesic(meters=radius).destination((latitude, longitude), 90).longitude
-    west = geodesic(meters=radius).destination((latitude, longitude), 270).longitude
+    north = geodesic(meters=radius).destination(
+        (latitude, longitude), 0).latitude
+    south = geodesic(meters=radius).destination(
+        (latitude, longitude), 180).latitude
+    east = geodesic(meters=radius).destination(
+        (latitude, longitude), 90).longitude
+    west = geodesic(meters=radius).destination(
+        (latitude, longitude), 270).longitude
 
     return f"{west},{south},{east},{north}"
 
@@ -150,3 +152,48 @@ def service_worker(request):
     response = FileResponse(open(path, 'rb'))
     response['Content-Type'] = 'application/javascript'
     return response
+
+
+def attractions_near_location(request):
+    lat = request.GET.get('lat')
+    lon = request.GET.get('lon')
+
+    if lat is None or lon is None:
+        return JsonResponse({'error': 'Missing lat and/or lon parameters'}, status=400)
+
+    location = Point(float(lon), float(lat), srid=4326)
+
+    attractions = Attractions.objects.annotate(
+        distance=Distance('geom', location)).order_by('distance')[:30]
+
+    for attraction in attractions:
+        print(
+            f"Attraction {attraction.name} (ID: {attraction.id}) is {attraction.distance.km:.2f} km away")
+
+    serializer = AttractionsSerializer(attractions, many=True)
+    print("Serialized Data:", serializer.data)  # Log the serialized data
+    return JsonResponse(serializer.data, safe=False)
+
+
+@require_http_methods(["GET"])
+def proxy_to_openrouteservice(request):
+    # Extract the parameters from the request
+    params = request.GET.dict()
+    api_key = '5b3ce3597851110001cf6248790957b715644b59a9b2caeee89e9fe3'
+    # URL for the OpenRouteService API
+    base_url = 'https://api.openrouteservice.org/v2/directions'
+    mode = params.pop('mode', 'driving-car')  # Default mode is driving-car
+    url = f'{base_url}/{mode}/geojson'
+
+    # Prepare data for POST request
+    data = {
+        "api_key": api_key,
+        "start": params.get('start'),
+        "end": params.get('end')
+    }
+
+    # Make the POST request to the OpenRouteService API
+    response = requests.post(url, json=data)
+
+    # Return the response as JSON
+    return JsonResponse(response.json(), safe=False)

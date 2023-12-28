@@ -17,4 +17,9 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('serviceWorker.js', views.service_worker),
     path('api/traffic_data', views.traffic_view, name='traffic_data'),
+    path('api/attractions_near_location', views.attractions_near_location,
+         name='attractions_near_location'),
+    path('api/proxy/', views.proxy_to_openrouteservice,
+         name='proxy_to_openrouteservice'),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
