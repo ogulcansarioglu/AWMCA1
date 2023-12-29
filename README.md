@@ -70,22 +70,23 @@ It can be installed on mobile phone or windows and run that way. I attached both
 
 ![installwindows](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/ce5a1769-0774-47e0-ba04-274c5782c6ae)
 
-# 5. RestApI
+# 7. RestApI
 
 You can navigate to ogulcansarioglu.site/api/v1/att/ or chat/ to see the RestAPI that I built for them, populated from the database and used in map creation. 
 
 ![api-page](https://i.ibb.co/2vNJdqn/Whats-App-Image-2023-11-12-at-12-51-05.jpg)
 
-# 5. Leaflet Map
+# 8. Leaflet Map
 
-Not an extra but I also implemented leaflet with openstreetmaps for geolacation amd map purposes that enables all the above. ]
+I also implemented leaflet with openstreetmaps for geolocation amd map purposes that enables all the above and write animations, routing layering. 
 
-# 6. PgAdmin4
+# 9. PgAdmin4
 
 ![pgadmin4-page](https://i.ibb.co/p2LgNBR/Whats-App-Image-2023-11-12-at-12-50-33.jpg)
 
+# 10. Fully Implemented Servers Workers for PWA
 
-#Responstive and PWA Design (Web Browser, Iphone, Android)
+Service workers are written to comply with PWA.
 
 1. Web Chrome:
 
