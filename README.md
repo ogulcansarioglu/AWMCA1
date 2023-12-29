@@ -1,7 +1,11 @@
 # AtrractionNation
 
+
+
 PWA Geolocation App built on postGIS and hosted on EC2. It helps users to plan their trip in Ireland, using real-time traffic data, a custom built reccomandation and search engine. 
 It also has a LLM implementation as a virtual assistant. 
+
+![road](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/47f80dcf-e5b6-435f-bec2-227d14a5eacb)
 
 website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end when navigating as I disabled append_slahs (APPEND_SLASH = False) like /api/v1/att/) 
 
