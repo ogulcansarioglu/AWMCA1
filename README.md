@@ -70,11 +70,12 @@ It can be installed on mobile phone or windows and run that way. I attached both
 
 ![installwindows](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/ce5a1769-0774-47e0-ba04-274c5782c6ae)
 
-# 7. RestApI
+# 7. Django Rest Framework
 
 You can navigate to ogulcansarioglu.site/api/v1/att/ or chat/ to see the RestAPI that I built for them, populated from the database and used in map creation. 
 
-![api-page](https://i.ibb.co/2vNJdqn/Whats-App-Image-2023-11-12-at-12-51-05.jpg)
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/dc5839f2-aaef-4b62-a29c-1f730b98f1bc)
+
 
 # 8. Leaflet Map
 
