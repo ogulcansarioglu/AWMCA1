@@ -45,6 +45,9 @@ You can search by name, tag or location and the app will responsively, automatic
 
 The app starts with showing the closest attraction to the users location. 
 
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/9bb800f4-3cab-4274-a95c-5733c6b2f84c)
+
+
 # 2. Click on the learn more
 
 You can click on the attraction icon, and a new information box will pop up with name, adress and Google Search link along with an option to launch an intelligent assistant (open-ai)
@@ -54,6 +57,9 @@ You can click on the attraction icon, and a new information box will pop up with
 Using MapBox API, this app allows users the select attraction by clicking on the icons, and then calculates a route for them along with duration, traffic status/delay possibility. Users may select to drive, cycle or walk. 
 Traffic and Routing are all real-time information handled on the fly. 
 
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/e4cc79c9-f08d-41a7-b892-b605304aae29)
+
+
 # 4. Reccomandations for Travel Plan
 
 Based on user interest and couple of questions, a user can get a travel plan via my smart reccomandation system and see it on the map in real-time along with all the associated information described above.
@@ -61,6 +67,9 @@ Based on user interest and couple of questions, a user can get a travel plan via
 # 5. Attraction Assistant (ChatGPT implementation)
 
 You can ask any question about the attraction in a persistent chat with ChatGPT4 virtual assistant designed for this purpose. Right now it's on testing phase, but I plan to implement it fully in my spare time after the assigment.
+
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/e53070f1-319e-46a1-90f4-a08089d5baa5)
+
 
 # 6. Fully Complient PWA App
 
