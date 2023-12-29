@@ -1,7 +1,5 @@
 # AtrractionNation
 
-
-
 PWA Geolocation App built on postGIS and hosted on EC2. It helps users to plan their trip in Ireland, using real-time traffic data, a custom built reccomandation and search engine. 
 It also has a LLM implementation as a virtual assistant. 
 
@@ -13,7 +11,7 @@ demo: [video demo:https://youtu.be/-8cSagH8g7I](https://youtu.be/-8cSagH8g7I)
 
 note: html template is: main.html, not index.html
 
-# AttractionFinger - ogulcansarioglu.site
+# AttractionNation- Brief Intro
 
 This app allows users to find attractions (natural parks, museums etc) and get information about them using ChatGPT assistant, along with providing a link via Google Search. 
 It comes up with travel plan based on user's interest and show real-time traffic data and routes for driving, cycling and walking. It also has a custom built search engine. 
