@@ -12,16 +12,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attraction Finder</title>
+        <!-- Bootstrap and Leaflet JavaScript at the end of the body -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <!-- Custom JavaScript -->
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/>
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <!-- Leaflet Routing Machine -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
-    <!-- Your custom CSS -->
+
     <style>
         /* styles.css */
 
@@ -29,25 +36,25 @@
             /* Base styles for the mobile travel plan */
 #mobile-travel-plan {
     display: none; /* Hidden by default */
-    background-color: #f7f7f7; /* Or any color that fits your design */
+    background-color: #f7f7f7; /* Or any color that fitsdesign */
     padding: 10px;
     margin: 0 auto; /* Center the container */
 }
 
 /* Mobile-specific styles */
 @media (max-width: 768px) {
-    #mobile-travel-plan {
-        display: block; /* Show only on mobile */
+    /* Hide the sidebar travel plan on mobile */
+    #left-panel, #right-panel {
+        display: none;
     }
 
-    #right-panel {
-        display: none; /* Hide the sidebar travel plan on mobile */
-    }
-
-    /* Adjust the map height to make space for the travel plan on mobile */
+    /* Adjust the map height to take up available space */
     #map {
-        height: calc(100vh - 50px - 150px); /* Adjust 50px for the travel plan height and 150px for the navbar and footer */
+        height: calc(100vh - 50px); /* Adjust 50px for the header */
+        width: 100%;
     }
+
+    /* Adjust  other elements as needed for mobile here */
 }
             .mode-button.active {
                 background-color: blue;
@@ -170,8 +177,13 @@ header .navbar {
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
 
-            <a class="navbar-brand" href="#">ParkFinder</a>
-            <button id="make-travel-plan-btn" class="btn btn-primary" onclick="toggleTravelPlanMode()">Make a Travel Plan</button>
+            <a class="navbar-brand" href="#">Attractionation</a>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button id="make-travel-plan-btn" class="btn btn-primary" onclick="toggleTravelPlanMode()">Make a Travel Plan</button>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#recommendationModal">
+                    Recommend a Plan
+                </button>
+            </div>
             <div id="transport-modes" style="padding: 10px;">
                 <button id="mode-car" class="mode-button">Car</button>
                 <button id="mode-bike" class="mode-button">Bike</button>
@@ -184,14 +196,14 @@ header .navbar {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <!-- ... other navbar code ... -->
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search Attractions" aria-label="Search"
-                               id="parkSearch" onkeyup="handleSearch()">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+
                 </nav>
 
             </div>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search Attractions" aria-label="Search" id="parkSearch" onkeyup="handleSearch()">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
         </div>
     </nav>
 </header>
@@ -201,7 +213,6 @@ header .navbar {
     <div class="d-flex">
 
         <div id="left-panel" class="attraction-panel"></div>
-
         <div id="map" style="height: 80vh; width: 70vh; display: block;
     margin-left: auto;
     margin-right: auto"></div>
@@ -226,6 +237,65 @@ header .navbar {
         © 2023 AttractionFinder
     </div>
 </footer>
+   <!-- Recommendation Modal -->
+    <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog" aria-labelledby="recommendationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recommendationModalLabel">Recommend a Plan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="recommendationForm">
+                        <div class="form-group">
+                            <label>What are you interested in?</label>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="interest" value="parks"> Parks</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="interest" value="museums"> Museums</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="interest" value="museums"> Castle</label>
+                            </div>
+                        </div>
+                        <!-- Other form elements -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitRecommendation">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Chat Modal -->
+<div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatModalLabel">Ask a Question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="chatContainer">
+                    <div id="chatBox" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+                    <input type="text" id="userInput" placeholder="Type your question..." style="width: 80%;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="sendChat()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootlint@1.1.0/dist/browser/bootlint.min.js"></script>
@@ -278,6 +348,12 @@ header .navbar {
 var isTravelPlanMode = false;
 var selectedAttractions = [];
 var userLocation;
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+        L.marker([userLocation.lat, userLocation.lng]).addTo(map).bindPopup("You are here!");
+    })
+}
 
 function toggleTravelPlanMode() {
     isTravelPlanMode = !isTravelPlanMode;
@@ -294,11 +370,12 @@ function attractionClicked(attraction) {
     // Optionally: Highlight the selected marker
 }
 
+highlightActiveModeButton('car');
 
 
 
 
-    function drawLineToClosestAttraction(userLocation, attraction) {
+function drawLineToClosestAttraction(userLocation, attraction) {
         var latlngs = [
             [userLocation.lat, userLocation.lng],
             [attraction.latitude, attraction.longitude]
@@ -306,10 +383,10 @@ function attractionClicked(attraction) {
     
         var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
         map.fitBounds(polyline.getBounds());
-    }
+}
 
 
-    var allMarkers = []; // Global array to store markers
+var allMarkers = []; // Global array to store markers
 
     function addHotelMarkers(data) {
         allMarkers.forEach(marker => map.removeLayer(marker));
@@ -383,14 +460,18 @@ function attractionClicked(attraction) {
     function closeNav() {
         document.getElementById('sidebar').style.width = "0";
     }
-    //create google search link for attraction
+    //create pop-up for attractions and Chat Assitant
     function createAttLink(attractionName, attractionId, attractionLat, attractionLng) {
         var encodedName = encodeURIComponent(attractionName);
         var searchUrl = `https://www.google.com/search?q=${encodedName}`;
-        return `<a href="${searchUrl}" target="_blank">${attractionName}</a> <br>
-                <button onclick="addToTravelPlan('${attractionName}', ${attractionId}, ${attractionLat}, ${attractionLng})">Add to Travel Plan</button>`;
+        return `
+            <a href="${searchUrl}" target="_blank">${attractionName}</a> <br>
+            <button onclick="event.preventDefault(); addToTravelPlan('${attractionName}', ${attractionId}, ${attractionLat}, ${attractionLng});">Add to Travel Plan</button> <br>
+            <button onclick="event.preventDefault(); showChatInterface('${attractionId}');">Ask a Question</button>
+        `;
     }
     function addToTravelPlan(name, id, lat, lng) {
+        event.preventDefault();
         if (selectedAttractions.length >= 5 || !isTravelPlanMode) return;
         selectedAttractions.push({ name, id, lat, lng });
         // Update UI to reflect the addition (optional)
@@ -421,31 +502,28 @@ function attractionClicked(attraction) {
         document.getElementById('sidebar').style.width = '350px'; // Adjust width for chat
 
     }
-    //virtual assistant
     function sendChat() {
-        var input = document.getElementById('userInput').value;
-        document.getElementById('userInput').value = '';
-
-        var chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML += `<div>User: ${input}</div>`;
-
+        var input = $('#userInput').val();
+        var chatBox = $('#chatBox');
+    
+        // Send the input to the server using the chat API
         fetch('/api/v1/chat/', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({message: input}),
+            body: JSON.stringify({message: input, attractionId: $('#chatModal').data('attractionId')}),
         })
-            .then(response => {
-                if (!response.ok) {
-                    console.log(response)
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                chatBox.innerHTML += `<div>ChatGPT: ${data.response}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-            })
-            .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(data => {
+            // Append both the user's message and the AI response to the chat box
+            chatBox.append(`<div>User: ${input}</div>`);
+            chatBox.append(`<div>ChatGPT: ${data.response}</div>`);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    
+        // Clear the input field
+        $('#userInput').val('');
     }
 
 
@@ -498,7 +576,7 @@ function deg2rad(deg) {
     return deg * (Math.PI/180)
 }
 
-
+//animate the closest attractions with a jumping red marker
 function animateClosestLocations(userLocation, attractions) {
     var attractionsWithDistance = attractions.map(function(attraction) {
         attraction.distance = calculateDistance(userLocation.lat, userLocation.lng, attraction.latitude, attraction.longitude);
@@ -522,8 +600,9 @@ function animateClosestLocations(userLocation, attractions) {
     });
 }
 
-function markAndAnimateUserLocation() {
-    var mode = '';
+
+//find user location and get 10 closest attractions
+function markAndAnimateUserLocation(mode) {
     if (currentMode === 'driving-car') {
         var mode = 'car';
     } else if (currentMode === 'cycling-regular') {
@@ -531,10 +610,8 @@ function markAndAnimateUserLocation() {
     } else if (currentMode === 'foot-walking') {
         var mode = 'walk';
     } else {
-        var mode = '';
+        var mode = mode;
     }
-
-    highlightActiveModeButton(mode);
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -578,7 +655,7 @@ function fetchAndDisplayRoute(start, end) {
         .catch(error => console.error('Error:', error));
 }
 
-
+//fetch route info for the current mode and append to the panel
 function updateAttractionPanels(userLocation, attractions) {
     const leftPanel = document.getElementById('left-panel');
     const rightPanel = document.getElementById('right-panel');
@@ -595,12 +672,19 @@ function updateAttractionPanels(userLocation, attractions) {
         //fetchAndDisplayRouteInfo(userLocation, attraction, currentMode, div);
     };
 
-    attractions.slice(0, 5).forEach(attraction => processPanel(attraction, leftPanel));
-    attractions.slice(5, 10).forEach(attraction => processPanel(attraction, rightPanel));
+    // Display the closest attraction
+    const closestAttraction = attractions[0];
+    const closestDiv = document.createElement('div');
+    closestDiv.innerHTML = `<h4>Closest Attractions</h4><p>${closestAttraction.name}</p>`;
+    leftPanel.appendChild(closestDiv);
+
+    // Process the remaining attractions
+    attractions.slice(1, 6).forEach(attraction => processPanel(attraction, leftPanel));
+    attractions.slice(6, 11).forEach(attraction => processPanel(attraction, rightPanel));
 }
 
 function fetchAndDisplayRouteInfo(start, end, mode, container) {
-    const apiKey = 'pk.eyJ1Ijoib2xjaSIsImEiOiJjbHFwanhzem4wdnhyMmlzYjFnOTE5Y2tvIn0.qhbMjUn7UUJ9hpNu0vCbXg'; // Replace with your actual API key
+    const apiKey = 'pk.eyJ1Ijoib2xjaSIsImEiOiJjbHFwanhzem4wdnhyMmlzYjFnOTE5Y2tvIn0.qhbMjUn7UUJ9hpNu0vCbXg'; 
     const url = `https://api.openrouteservice.org/v2/directions/${mode}/geojson?api_key=${apiKey}&start=${start.lng},${start.lat}&end=${end.longitude},${end.latitude}`;
 
     fetch(url)
@@ -617,7 +701,7 @@ function fetchAndDisplayRouteInfo(start, end, mode, container) {
         .catch(error => console.error('Error:', error));
 }
 
-
+//calculate the distance between user location and attraction and return the closest attraction
 function findClosestAttraction(userLocation, attractions) {
     let closestAttraction = null;
     let minDistance = Infinity;
@@ -640,7 +724,7 @@ function findClosestAttraction(userLocation, attractions) {
     console.log("Closest Attraction:", closestAttraction);
     return closestAttraction;
 }
-
+//updated the UI for the selected mode
 function updateRoutesForMode(mode) {
     currentMode = {% if mode %}"{{ mode }}"{% else %}"car"{% endif %};
     console.log("Current mode:", currentMode);
@@ -655,7 +739,7 @@ function updateRoutesForMode(mode) {
             mode = 'walk';
             break;
         default:
-            // Handle default case here
+            mode = mode;
             break;
     }
     console.log("Mode:", mode);
@@ -678,7 +762,7 @@ function updateRoutesForMode(mode) {
         }
     });
 
-    markAndAnimateUserLocation(); 
+    markAndAnimateUserLocation(modeButtonId); 
 }
 
 function highlightActiveModeButton(mode) {
@@ -686,17 +770,19 @@ function highlightActiveModeButton(mode) {
     document.querySelectorAll('.mode-button').forEach(btn => {
         btn.classList.remove('active');
     });
-
+    console.log("mode", mode)
     // Add active class to the current mode button
     let modeButtonId = 'mode-' + mode;
+    console.log(modeButtonId);
     let modeButton = document.getElementById(modeButtonId);
+    console.log("mode button", modeButton)
     if (modeButton) {
         modeButton.classList.add('active');
     } else {
         console.error('Button not found: ' + modeButtonId);
     }
 }
-
+//fetch route for the selected mode
 function buildTravelRoute() {
     var totalDistance = 0;
     var totalTime = 0;
@@ -730,7 +816,7 @@ function buildTravelRoute() {
     calculateNextLeg(0);
 }
 
-
+//display the travel plan
 function displayTravelPlan(planDetails, totalDistance, totalTime) {
     // Create a container for the mobile travel plan if it doesn't exist
     let mobileTravelPlan = document.getElementById('selected-attractions-list');
@@ -772,19 +858,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    //event listener for submit button on reccomandation
+    document.getElementById('submitRecommendation').addEventListener('click', submitRecommendationForm);
     // Event listeners for mode buttons
     document.getElementById('mode-car').addEventListener('click', () => {
         currentMode = 'driving-car';
+        console.log("current mode", currentMode)
         highlightActiveModeButton('car');
         updateRoutesForMode(currentMode);
     });
     document.getElementById('mode-bike').addEventListener('click', () => {
         currentMode = 'cycling-regular';
+        console.log("current mode", currentMode)
         highlightActiveModeButton('bike');
         updateRoutesForMode(currentMode);
     });
     document.getElementById('mode-walk').addEventListener('click', () => {
         currentMode = 'foot-walking';
+         console.log("current mode", currentMode)
         highlightActiveModeButton('walk');
         updateRoutesForMode(currentMode);
     });
@@ -792,8 +883,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function fetchRoute(start, end, mode) {
     const apiKey = 'pk.eyJ1Ijoib2xjaSIsImEiOiJjbHFwanhzem4wdnhyMmlzYjFnOTE5Y2tvIn0.qhbMjUn7UUJ9hpNu0vCbXg';
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start.lng},${start.lat};${end.lng},${end.lat}?geometries=geojson&access_token=${apiKey}`;
+    
+    let url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start.lng},${start.lat};${end.lng},${end.lat}?geometries=geojson&access_token=${apiKey}`;
+    console.log("end", end.longitude)
 
+    if(start.lat == null || start.lng == null || end.lat == null || end.lng == null) {
+        console.log("Invalid coordinates for marker:", start.latitude, start.longitude, end.longitude, end.latitude);
+        url = `https://api.mapbox.com/directions/v5/mapbox/driving/${userLocation.lng},${userLocation.lat};${end.longitude},${end.latitude}?geometries=geojson&access_token=${apiKey}`;
+    }
+    console.log(currentMode)
     return fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -808,7 +906,19 @@ function fetchRoute(start, end, mode) {
             const traffic = route.weight
             const trafficDelay = route.weight - route.duration
             const latLngs = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
-            L.polyline(latLngs, { color: 'green' }).addTo(map);
+            console.log(currentMode)
+            let color;
+            if (currentMode == 'car') {
+                color = 'green';
+            } else if (currentMode == 'bike') {
+                color = 'blue';
+            } else if (currentMode == 'foot-walking') {
+                color = 'red';
+            } else {
+                color = 'green';
+            }
+            console.log("color", color)
+            L.polyline(latLngs, { color: color}).addTo(map);
             const distance = route.distance // Distance in meters
             const duration = route.duration// Duration in seconds
             return {
@@ -821,7 +931,7 @@ function fetchRoute(start, end, mode) {
 }
 
 function buildOptimizedRoute() {
-    // Ensure we have the user's current location
+    // Ensure the app have the user's current location
     if (!userLocation) {
         alert('User location is not available.');
         return;
@@ -843,7 +953,7 @@ function buildOptimizedRoute() {
     // Function to recursively calculate the route for each leg
     function calculateNextLeg(startIndex, previousAttraction) {
         if (startIndex >= selectedAttractions.length) {
-            // Base case: we are done
+            // Base case: its done
             displayTravelPlan(travelPlanDetails, totalDistance, totalTime);
             return;
         }
@@ -874,6 +984,163 @@ function buildOptimizedRoute() {
     // Start calculating from the user's location to the first attraction
     calculateNextLeg(0, { lat: userLocation.lat, lng: userLocation.lng });
 }
+//fetch all attractions
+function getAllAttractions() {
+    return fetch('/api/v1/att/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Attractions:", data)
+            // Assuming the data is the array of attractions
+            return data;
+        })
+        .catch(error => {
+            console.error('Error fetching attractions:', error);
+            return []; // Return an empty array in case of error
+        });
+}
+
+//reccomendation logic
+
+function buildAndDisplayRoute(attractions, currentMode) {
+    console.log("build and display route")
+    clearMapRoutes(); // Clear existing routes
+    console.log("attractions", attractions)
+    userLocation = { lat: 53.3498, lng: -6.2603 }; // Reset user location to Dublin
+    let travelPlanDetails = [];
+    let totalDistance = 0;
+    let totalTime = 0;
+
+    let processNextAttraction = (index, previousAttraction) => {
+        if (index >= attractions.length) {
+            // All attractions processed, display the travel plan
+            displayTravelPlan(travelPlanDetails, totalDistance, totalTime);
+            return;
+        }
+
+        let currentAttraction = attractions[index];
+        console.log("current attraction", currentAttraction)
+        console.log("attractions", attractions)
+        console.log("previous", previousAttraction)
+        fetchRoute(previousAttraction, currentAttraction, currentMode)
+            .then(route => {
+                console.log("Route:", route)
+                totalDistance += route.distance;
+                totalTime += route.duration;
+
+                travelPlanDetails.push({
+                    attraction: currentAttraction,
+                    distance: route.distance,
+                    duration: route.duration,
+                    trafficDelay: route.trafficDelay // Assuming traffic delay data
+                });
+
+                drawRouteOnMap(route.coordinates); // Draw the route segment
+                processNextAttraction(index + 1, currentAttraction); // Process next attraction
+            })
+            .catch(error => console.error('Error fetching route:', error));
+    };
+
+    // Start processing from the user's location to the first attraction
+    processNextAttraction(0, { lat: userLocation.lat, lng: userLocation.lng });
+}
+
+// Function to display the travel plan
+function displayTravelPlan(planDetails, totalDistance, totalTime) {
+    let mobileTravelPlan = document.getElementById('selected-attractions-list');
+    if (!mobileTravelPlan) {
+        mobileTravelPlan = document.createElement('div');
+        mobileTravelPlan.id = 'selected-attractions-list';
+        document.body.appendChild(mobileTravelPlan); // Append to the body or a specific container
+    }
+
+    let trafficStatus = planDetails.some(detail => detail.trafficDelay > 100) ? 'High' : 'Low';
+
+    mobileTravelPlan.innerHTML = `<h3>Travel Plan</h3>
+                                  <p>Total Time: ${totalTime.toFixed(2)} minutes</p>
+                                  <p>Mode: ${mode}</p>
+                                  <p>Total Distance: ${totalDistance.toFixed(2)} km</p>
+                                  <p>Traffic Status: ${trafficStatus}</p>`;
+
+    planDetails.forEach((detail, index) => {
+        mobileTravelPlan.innerHTML += `<div>
+                                           <h4>${index + 1}. ${detail.attraction.name}</h4>
+                                           <p>Distance: ${detail.distance.toFixed(2)} km</p>
+                                           <p>Duration: ${detail.duration.toFixed(2)} minutes</p>
+                                       </div>`;
+    });
+}
+
+// Function to draw the route on the map
+function drawRouteOnMap(coordinates) {
+    L.polyline(coordinates, { color: 'green' }).addTo(map);
+}
+
+// Function to clear existing routes from the map
+function clearMapRoutes() {
+    map.eachLayer(layer => {
+        if (layer instanceof L.Polyline) {
+            map.removeLayer(layer);
+        }
+    });
+}
+
+function submitRecommendationForm() {
+    var interests = ["park", "museum", "castle", "michael collins centre"];
+    console.log("submit recommendation form")
+    document.querySelectorAll('#recommendationForm input[type="checkbox"]:checked').forEach((checkbox) => {
+        interests.push(checkbox.value.toLowerCase());
+    });
+
+    // Hide the modal
+    $('#recommendationModal').modal('hide');
+
+    // Fetch attractions, filter interest and build the route
+    getAllAttractions().then(allAttractions => {
+        var filteredAttractions = allAttractions.filter(attraction => {
+            // Convert attraction name to lowercase for case-insensitive matching
+            const attractionName = attraction.name.toLowerCase();
+            
+            // Check if the name contains "park" or "hotel"
+            return attractionName.includes('park') || attractionName.includes('hotel');
+        });
+        console.log("filtered attractions", filteredAttractions)
+        buildAndDisplayRoute(filteredAttractions, currentMode);
+    }).catch(error => {
+        console.error('Error fetching attractions:', error);
+    });
+}
+
+//mobile
+
+function addTouchEventListener(selector, callback) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(element => {
+        element.addEventListener('touchend', function(event) {
+            callback(event);
+        });
+    });
+}
+
+function showChatInterface(attractionId) {
+    // Optional: Set the attraction ID to a data attribute on the modal for later use
+    $('#chatModal').data('attractionId', attractionId);
+
+    // Show the modal
+    $('#chatModal').modal('show');
+
+    // Optional: Focus the input field after the modal is shown
+    $('#chatModal').on('shown.bs.modal', function () {
+        $('#userInput').trigger('focus');
+    });
+
+}
+
+
 
 
 
