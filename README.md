@@ -3,6 +3,9 @@
 PWA Geolocation App built on postGIS and hosted on EC2. It helps users to plan their trip in Ireland, using real-time traffic data, a custom built reccomandation and search engine. 
 It also has a LLM implementation as a virtual assistant. 
 
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/04c5ebff-6fc3-4204-b611-8ff03cacd099)
+
+
 ![road](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/47f80dcf-e5b6-435f-bec2-227d14a5eacb)
 
 website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end when navigating as I disabled append_slahs (APPEND_SLASH = False) like /api/v1/att/) 
@@ -69,6 +72,16 @@ Based on user interest and couple of questions, a user can get a travel plan via
 You can ask any question about the attraction in a persistent chat with ChatGPT4 virtual assistant designed for this purpose. Right now it's on testing phase, but I plan to implement it fully in my spare time after the assigment.
 
 ![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/e53070f1-319e-46a1-90f4-a08089d5baa5)
+
+# 5. Responsive Design
+
+Android: 
+
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/42ebdaf2-0d78-4482-9b75-b67652d4e8b9)
+
+IOS:
+
+![WhatsApp Image 2023-12-30 at 14 29 23](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/befbf102-0823-4ab4-99c9-c77d0bb8ad8c)
 
 
 # 6. Fully Complient PWA App
