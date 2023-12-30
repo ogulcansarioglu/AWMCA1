@@ -3,8 +3,7 @@
 PWA Geolocation App built on postGIS and hosted on EC2. It helps users to plan their trip in Ireland, using real-time traffic data, a custom built reccomandation and search engine. 
 It also has a LLM implementation as a virtual assistant. 
 
-![PWA](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/10d0b160-ed48-4deb-8fb8-f499917108a6)
-
+![maskable-icon](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/a38b0d01-8723-4205-b82d-96c61de01bbd)
 
 ![WhatsApp Image 2023-12-30 at 14 29 23](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/b93b430e-3c12-42b7-be71-d62d7169b539)
 
