@@ -88,6 +88,11 @@ Android:
 
 ![WhatsApp Image 2023-12-30 at 13 57 14](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/e62ef5a5-6e8f-4653-9e9e-11d5928d1e33)
 
+Deployed Report:
+
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/c3cbed63-a806-4bf2-80f8-f2b752960964)
+
+
 
 # 7. Django Rest Framework
 
