@@ -9,8 +9,6 @@ It also has a LLM implementation as a virtual assistant.
 
 website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end when navigating as I disabled append_slahs (APPEND_SLASH = False) like /api/v1/att/) 
 
-demo: [video demo:https://youtu.be/-8cSagH8g7I](https://youtu.be/-8cSagH8g7I)
-
 note: html template is: main.html, not index.html
 
 # AttractionNation- Brief Intro
