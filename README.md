@@ -5,7 +5,6 @@ It also has a LLM implementation as a virtual assistant.
 
 ![PWA](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/10d0b160-ed48-4deb-8fb8-f499917108a6)
 
-![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/04c5ebff-6fc3-4204-b611-8ff03cacd099)
 
 ![WhatsApp Image 2023-12-30 at 14 29 23](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/b93b430e-3c12-42b7-be71-d62d7169b539)
 
