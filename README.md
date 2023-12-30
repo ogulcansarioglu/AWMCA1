@@ -5,9 +5,6 @@ It also has a LLM implementation as a virtual assistant.
 
 ![maskable-icon](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/a38b0d01-8723-4205-b82d-96c61de01bbd)
 
-![WhatsApp Image 2023-12-30 at 14 29 23](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/b93b430e-3c12-42b7-be71-d62d7169b539)
-
-
 ![road](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/47f80dcf-e5b6-435f-bec2-227d14a5eacb)
 
 website: [ogulcansarioglu.site](ogulcansarioglu.site) (Please add / at the end when navigating as I disabled append_slahs (APPEND_SLASH = False) like /api/v1/att/) 
