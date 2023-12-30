@@ -3,7 +3,11 @@
 PWA Geolocation App built on postGIS and hosted on EC2. It helps users to plan their trip in Ireland, using real-time traffic data, a custom built reccomandation and search engine. 
 It also has a LLM implementation as a virtual assistant. 
 
+![PWA](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/10d0b160-ed48-4deb-8fb8-f499917108a6)
+
 ![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/04c5ebff-6fc3-4204-b611-8ff03cacd099)
+
+![WhatsApp Image 2023-12-30 at 14 29 23](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/b93b430e-3c12-42b7-be71-d62d7169b539)
 
 
 ![road](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/47f80dcf-e5b6-435f-bec2-227d14a5eacb)
@@ -77,11 +81,12 @@ You can ask any question about the attraction in a persistent chat with ChatGPT4
 
 Android: 
 
-![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/42ebdaf2-0d78-4482-9b75-b67652d4e8b9)
+![WhatsApp Image 2023-12-30 at 14 29 19 (1)](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/4b7d11ca-daa5-4572-bb45-6b81a94121e1)
+
 
 IOS:
 
-![WhatsApp Image 2023-12-30 at 14 29 23](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/befbf102-0823-4ab4-99c9-c77d0bb8ad8c)
+![WhatsApp Image 2023-12-30 at 14 29 19](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/d0496aaa-9cee-4fd8-a60c-066d547b6141)
 
 
 # 6. Fully Complient PWA App
