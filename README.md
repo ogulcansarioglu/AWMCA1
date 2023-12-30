@@ -75,9 +75,19 @@ You can ask any question about the attraction in a persistent chat with ChatGPT4
 
 It can be installed on mobile phone or windows and run that way. I attached both screenshot and lighthouse evaluation.
 
-![PWA](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/305ca113-d845-4da0-b28e-083c3b29b796)
+![image](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/16364759-7d83-40a2-8e76-d8c7eec51ee2)
+
+Windows:
 
 ![installwindows](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/ce5a1769-0774-47e0-ba04-274c5782c6ae)
+
+IOS:
+![WhatsApp Image 2023-12-30 at 13 41 24](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/e74eb416-e158-4e0f-8db8-ad1087249fcd)
+
+Android:
+
+![WhatsApp Image 2023-12-30 at 13 57 14](https://github.com/ogulcansarioglu/AWMCA1/assets/93154247/e62ef5a5-6e8f-4653-9e9e-11d5928d1e33)
+
 
 # 7. Django Rest Framework
 
