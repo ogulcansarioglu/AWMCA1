@@ -199,12 +199,38 @@ PWA_APP_ICONS = [
     {
         'src': '/static/images/icons/icon-144x144.png',
         'sizes': '144x144'
+    },
+    {
+        'src': '/static/images/icons/block-black.png',
+        'sizes': '512x512',
+        'type': 'image/png'
+    },
+    {
+        "src": "/static/images/icons/maskable_icon.png",
+        "sizes": "196x196",
+        "type": "image/png",
+        "purpose": "any maskable"
     }
 ]
 PWA_APP_ICONS_APPLE = [
     {
         'src': '/static/images/icons/icon-96x96.png',
         'sizes': '160x160'
+    },
+    {
+        'src': '/static/images/icons/icon-144x144.png',
+        'sizes': '144x144'
+    },
+    {
+        'src': '/static/images/icons/block-black.png',
+        'sizes': '512x512',
+        'type': 'image/png'
+    },
+    {
+        "src": "/static/images/icons/maskable_icon.png",
+        "sizes": "196x196",
+        "type": "image/png",
+        "purpose": "any maskable"
     }
 ]
 PWA_APP_SPLASH_SCREEN = [
