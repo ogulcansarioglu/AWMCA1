@@ -25,6 +25,10 @@ WORKDIR /usr/src/app
 COPY ENV.yml /usr/src/app
 RUN conda env create -n ca1 --file ENV.yml
 
+# Install packages not available in Conda using Pip
+RUN conda run -n ca1 pip install django-pwa==1.1.0
+
+
 RUN echo "conda activate ca1" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
